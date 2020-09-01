@@ -7,6 +7,9 @@ import os
 import sys
 import time
 import datetime
+######################################  Global Variable  ###########################################################
+bufferSize = 64 * 1024 #for AES
+
 ######################################  TFTP  Server  ###########################################################
 MAXSIZE = 500
 PORT = 69
@@ -22,12 +25,14 @@ def TFTP():
     	data, addr = s.recvfrom(MAXSIZE)
     	print( "{} from {}".format(data, addr))
     	s.sendto("Hello, {}".format(addr), addr)
-
+    Menu()
 '''       
 def tftp():
     server = tftpy.TftpServer('/tftpboot')
     ip_address = input("Enter server IP adrress: ")
     server.listen(ip_address, 69)'''
+
+
 ######################################  Crypto Module  ###########################################################
 def Crypto():
     print("Crypto")
@@ -44,6 +49,8 @@ def Crypto():
         switch_os.append(x[3])
         counter = counter + 1
     file.close()
+
+    Menu()
 ######################################  Create New DB  ###########################################################
 def Create_DB():
     print("Create_DB")
@@ -52,43 +59,94 @@ def Create_DB():
     192.168.1.1,admin,admin,HP
     ''')
     File_name = input ("Entry name for new DB: ")
-    f = open (str("Filename")+".txt","w+")
-    flag = ""
+    f = open (str(File_name) + ".txt","a+")
     connection = input("Add first connection: ")
     f.write(connection + "\n")
+
+    flag = ""
     while True:
         flag = input ("Do you wanna add another connection? (Y/N): ")
         if flag == "Y":
             connection = input("Enter new parameters:")
             f.write(connection + "\n")
         else:
-            continue
+            break
+    f.close()
     print("Your data base will be encrypted with AES-256")
     password = input("Enter password for database: ")
+    pyAesCrypt.encryptFile(File_name + ".txt", File_name + ".txt.aes", password, bufferSize)
+    os.remove(File_name + ".txt")
+    Menu()
+######################################  Edit Existing DB  ###########################################################
+def Edit_DB():
+    print("Edit_DB")
+    File_name = input("Entry DB name: ")
+    password = input("Entry DB password: ")
+    pyAesCrypt.decryptFile(File_name + ".txt.aes", File_name + ".txt", password, bufferSize)
+    os.system("notepad.exe " + File_name + ".txt")
+    os.remove(File_name + ".txt.aes")
+    print("Don't forget to encrypt database after you finish!")
+    Menu()
 
-
+######################################  Encrypt DB  ###########################################################
+def Encrypt_DB():
+    print("Encrypt_DB")
+    File_name = input("Entry DB name: ")
+    password = input("Entry DB password: ")
+    pyAesCrypt.encryptFile(File_name + ".txt", File_name + ".txt.aes", password, bufferSize)
+    os.remove(File_name + ".txt")
+    print("Database is encrypted")
+    Menu()
 ######################################  Backup Telnet Module  ###########################################################
 def Backup_Telnet():
     print("Backup_Telnet")
 
+    Menu()
 ######################################  Backup SSH Module  ###########################################################
 def Backup_SSH():
     print("Backup_SSH")
 
+    Menu()
 ######################################  SNMP Walk Module  ###########################################################
 def SNMP_Walk():
     print("SNMP_Walk")
+
+    Menu()
+######################################  Execute custom command  ###########################################################
+def Execute_Command():
+    print("Execute_Command")
+
+    Menu()
 ############################################    MENU    #######################################################
 def Menu():
-    print('''
+    choice  = input('''
     1) Create new Database
     2) Edit existing Database
-    2) Do backup using telnet
-    3) Do backup using SSH
-    4) Set simple FTP server
-    5) SNMP walk
-    6) Execute custom command 
+    3) Do backup using telnet
+    4) Do backup using SSH
+    5) Start simple FTP server
+    6) SNMP walk
+    7) Execute custom command
+    8) Encrypt Database 
+    
+    Choose option:
     ''')
+    if int(choice) == 1:
+        Create_DB()
+    elif int(choice) == 2:
+        Edit_DB()
+    elif int(choice) == 3:
+        Backup_Telnet()
+    elif int(choice) == 4:
+        Backup_SSH()
+    elif int(choice) == 5:
+        TFTP()
+    elif int(choice) == 6:
+        SNMP_Walk()
+    elif int(choice) == 7:
+        Execute_Command()
+    elif int(choice) == 7:
+        Encrypt_DB()
 ############################################    MAIN    #######################################################
 Menu()
 
