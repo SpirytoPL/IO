@@ -128,7 +128,9 @@ def Menu():
     6) SNMP walk
     7) Execute custom command
     8) Encrypt Database 
-    
+    9) Ping check
+    10) Restor configuration from backup
+    11) Basic configuration template - console
     Choose option:
     ''')
     if int(choice) == 1:
