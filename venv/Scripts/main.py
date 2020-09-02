@@ -7,31 +7,15 @@ import os
 import sys
 import time
 import datetime
-import extremeos
+import extremeos, ciscoos, threecomos, huaweios, hpos
 ######################################  Global Variable  ###########################################################
 bufferSize = 64 * 1024 #for AES
 
-######################################  TFTP  Server  ###########################################################
-MAXSIZE = 500
-PORT = 69
-
+###################################### 5) TFTP  Server  ###########################################################
 def TFTP():
-    print("TFTP")
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    ip_address = input("Enter server IP adrress: ")     #get data from user
-    s.bind((ip_address, PORT))
-    print ("listening on {}".format(PORT))
-
-    while True:
-    	data, addr = s.recvfrom(MAXSIZE)
-    	print( "{} from {}".format(data, addr))
-    	s.sendto("Hello, {}".format(addr), addr)
-    Menu()
-'''       
-def tftp():
-    server = tftpy.TftpServer('/tftpboot')
+    server = tftpy.TftpServer('')
     ip_address = input("Enter server IP adrress: ")
-    server.listen(ip_address, 69)'''
+    server.listen(ip_address, 69)
 
 
 ######################################  Crypto Module  ###########################################################
@@ -52,12 +36,12 @@ def Crypto():
     file.close()
 
     Menu()
-######################################  Create New DB  ###########################################################
+###################################### 1) Create New DB  ###########################################################
 def Create_DB():
     print("Create_DB")
     print('''
     Database structure: "IP_Address,Login,Password,OS"
-    192.168.1.1,admin,admin,HP
+    192.168.1.1,admin,admin,(Extreme/HP/3com/Cisco/Huawei)
     ''')
     File_name = input ("Entry name for new DB: ")
     f = open (str(File_name) + ".txt","a+")
@@ -78,7 +62,7 @@ def Create_DB():
     pyAesCrypt.encryptFile(File_name + ".txt", File_name + ".txt.aes", password, bufferSize)
     os.remove(File_name + ".txt")
     Menu()
-######################################  Edit Existing DB  ###########################################################
+###################################### 2) Edit Existing DB  ###########################################################
 def Edit_DB():
     print("Edit_DB")
     File_name = input("Entry DB name: ")
@@ -89,7 +73,7 @@ def Edit_DB():
     print("Don't forget to encrypt database after you finish!")
     Menu()
 
-######################################  Encrypt DB  ###########################################################
+###################################### 8) Encrypt DB  ###########################################################
 def Encrypt_DB():
     print("Encrypt_DB")
     File_name = input("Entry DB name: ")
@@ -98,22 +82,63 @@ def Encrypt_DB():
     os.remove(File_name + ".txt")
     print("Database is encrypted")
     Menu()
-######################################  Backup Telnet Module  ###########################################################
+###################################### 3)  Backup Telnet Module  ###########################################################
 def Backup_Telnet():
     print("Backup_Telnet")
+    choice  = input ('''
+    1) Use existing database
+    2) Custom host 
+    ''')
+    if int(choice) == 1:
+        TFTP_IP = input("Enter TFTP Server IP: ")
+        File_name = input("Entry DB name: ")
+        password = input("Entry DB password: ")
+        pyAesCrypt.decryptFile(File_name + ".txt.aes", File_name + ".txt", password, bufferSize)
+        file = open(File_name + ".txt")
+        counter = 0
+        IP = []
+        login = []
+        password = []
+        switch_os = []
+        for line in file:
+            x = line.split(",")
+            ip.append(x[0])
+            login.append(x[1])
+            password.append(x[2])
+            switch_os.append(x[3])
+            counter = counter + 1
+        file.close()
+        for i in range(counter):
+            if switch_os[i] == "Extreme":
+                extremeos.Backup_Telnet(IP,login,password,TFTP_IP)
+            elif switch_os[i] == "HP":
+                hpos.Backup_Telnet(IP,login,password,TFTP_IP)
+            elif switch_os[i] == "3com":
+                threecomos.Backup_Telnet(IP,login,password,TFTP_IP)
+            elif switch_os[i] == "Cisco":
+                ciscoos.Backup_Telnet(IP,login,password,TFTP_IP)
+            elif switch_os[i] == "Huawei":
+                huaweios.Backup_Telnet(IP,login,password,TFTP_IP)
 
+    elif int(choice) == 2:
+        IP = input("IP: ")
+        login = input ("login: ")
+        password = input("password: ")
+        TFTP_IP = input ("TFTP Server IP: ")
+        switch_os = input ("Enter switch OS (Extreme/3com/HP/Cisco/Huawei): ")
+        extremeos.Backup_EXOS_Telnet(IP, login, password, TFTP_IP)
     Menu()
-######################################  Backup SSH Module  ###########################################################
+###################################### 4) Backup SSH Module  ###########################################################
 def Backup_SSH():
     print("Backup_SSH")
 
     Menu()
-######################################  SNMP Walk Module  ###########################################################
+###################################### 6) SNMP Walk Module  ###########################################################
 def SNMP_Walk():
     print("SNMP_Walk")
 
     Menu()
-######################################  Execute custom command  ###########################################################
+###################################### 7) Execute custom command  ###########################################################
 def Execute_Command():
     print("Execute_Command")
 
@@ -148,8 +173,10 @@ def Menu():
         SNMP_Walk()
     elif int(choice) == 7:
         Execute_Command()
-    elif int(choice) == 7:
+    elif int(choice) == 8:
         Encrypt_DB()
+    else:
+        Menu()
 ############################################    MAIN    #######################################################
 Menu()
 
