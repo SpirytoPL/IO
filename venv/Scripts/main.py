@@ -144,7 +144,7 @@ def Backup_SSH():
 ###################################### 6) SNMP Walk Module  ###########################################################
 def SNMP_Walk():
     print("SNMP_Walk")
-
+    community = input("Enter read community string: ")
 
     Menu()
 ###################################### 7) Execute custom command  ###########################################################
