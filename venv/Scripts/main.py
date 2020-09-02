@@ -7,6 +7,7 @@ import os
 import sys
 import time
 import datetime
+import extremeos
 ######################################  Global Variable  ###########################################################
 bufferSize = 64 * 1024 #for AES
 
