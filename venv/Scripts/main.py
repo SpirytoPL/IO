@@ -3,10 +3,8 @@ import socket
 import tftpy
 import pyAesCrypt
 import pysnmp
-import os
-import sys
-import time
-import datetime
+import serial
+import os, sys, time, datetime
 import extremeos, ciscoos, threecomos, huaweios, hpos
 ######################################  Global Variable  ###########################################################
 bufferSize = 64 * 1024 #for AES
@@ -16,7 +14,6 @@ def TFTP():
     server = tftpy.TftpServer('')
     ip_address = input("Enter server IP adrress: ")
     server.listen(ip_address, 69)
-
 
 ######################################  Crypto Module  ###########################################################
 def Crypto():
@@ -126,7 +123,18 @@ def Backup_Telnet():
         password = input("password: ")
         TFTP_IP = input ("TFTP Server IP: ")
         switch_os = input ("Enter switch OS (Extreme/3com/HP/Cisco/Huawei): ")
-        extremeos.Backup_EXOS_Telnet(IP, login, password, TFTP_IP)
+        if switch_os == "Extreme":
+            extremeos.Backup_Telnet(IP, login, password, TFTP_IP)
+        elif switch_os == "HP":
+            hpos.Backup_Telnet(IP, login, password, TFTP_IP)
+        elif switch_os == "3com":
+            threecomos.Backup_Telnet(IP, login, password, TFTP_IP)
+        elif switch_os == "Cisco":
+            ciscoos.Backup_Telnet(IP, login, password, TFTP_IP)
+        elif switch_os == "Huawei":
+            huaweios.Backup_Telnet(IP, login, password, TFTP_IP)
+    else:
+        Backup_Telnet()
     Menu()
 ###################################### 4) Backup SSH Module  ###########################################################
 def Backup_SSH():
@@ -137,26 +145,90 @@ def Backup_SSH():
 def SNMP_Walk():
     print("SNMP_Walk")
 
+
     Menu()
 ###################################### 7) Execute custom command  ###########################################################
 def Execute_Command():
     print("Execute_Command")
+    choice = input('''
+    1) Telnet
+    2) SSH
+    ''')
+    db = input("Entry database name: ")
 
     Menu()
+###################################### 9) Ping check  ###########################################################
+def Ping_Check():
+    print("Ping_check")
+    choice = input('''
+    1) Use hosts from database
+    2) Use host IP
+    3) Use scope of IP
+    ''')
+    if int(choice) == 1:
+        print("1")
+    elif int(choice) == 2:
+        IP = input("Entry host IP: ")
+        response = os.system("ping -n 1 " + IP)
+        time.sleep(3)
+    elif int(choice) == 3:
+        network = input("Entry netowrk to ping: ")
+        mask = input("Entry mask (24-32): ")
+        mask = 32 - int(mask)
+        for i in range (2**mask-1):
+            response = os.system("ping -n 1 " + network + 1 + i)
+            time.sleep(1)
+    else:
+        Ping_Check()
+    Menu()
+###################################### 10) Restor configuration  ###########################################################
+def Restore_Configuration():
+    print("Restore_Configuration")
+
+    Menu()
+###################################### 11) Configuration Template  ###########################################################
+def Configuration_Template():
+    print("Configuration Template - console connection")
+    switch_os = input("Entry os to configuration: ")
+    com = input("Entry COMX name: ")
+    ser = serial.Serial(
+        port=str(com),  # COM is on windows, linux is different
+        baudrate=9600,  # many different baudrates are available
+        parity='N',  # no idea
+        stopbits=1,
+        bytesize=8,
+        timeout=8  # 8 seconds seems to be a good timeout, may need to be increased
+    )
+    ser.isOpen()
+    ser.flushInput()
+    if switch_os == "Extreme":
+        extremeos.Configuration_Template(IP, login, password, TFTP_IP)
+    elif switch_os == "HP":
+        hpos.Configuration_Template(IP, login, password, TFTP_IP)
+    elif switch_os == "3com":
+        threecomos.Configuration_Template(IP, login, password, TFTP_IP)
+    elif switch_os == "Cisco":
+        ciscoos.Configuration_Template(IP, login, password, TFTP_IP)
+    elif switch_os == "Huawei":
+        huaweios.Backup_Telnet(IP, login, password, TFTP_IP)
+    Menu()
+
+
 ############################################    MENU    #######################################################
 def Menu():
     choice  = input('''
+    Welcome to automatization tool for network device, supported os: Extreme, HP, 3com, Huawei, Cisco
     1) Create new Database
     2) Edit existing Database
     3) Do backup using telnet
-    4) Do backup using SSH
+    *4) Do backup using SSH
     5) Start simple FTP server
-    6) SNMP walk
-    7) Execute custom command
+    *6) SNMP walk
+    *7) Execute custom command
     8) Encrypt Database 
     9) Ping check
-    10) Restor configuration from backup
-    11) Basic configuration template - console
+    *10) Restor configuration from backup
+    *11) Basic configuration template - console
     Choose option:
     ''')
     if int(choice) == 1:
@@ -175,11 +247,14 @@ def Menu():
         Execute_Command()
     elif int(choice) == 8:
         Encrypt_DB()
+    elif int(choice) == 9:
+        Ping_Check()
+    elif int(choice) == 10:
+        Restore_Configuration()
+    elif int(choice) == 11:
+        Configuration_Template()
     else:
         Menu()
 ############################################    MAIN    #######################################################
 Menu()
 
-
-if __name__ == "__main__":
-	TFTP()

@@ -2,6 +2,7 @@
 import telnetlib
 
 def Backup_Telnet(IP, login, password, TFTP_IP):
+    print("Backup_Telnet")
     tn = telnetlib.Telnet(IP)
     time.sleep(1)
     tn.read_until(b"Login:")
@@ -19,3 +20,6 @@ def Backup_Telnet(IP, login, password, TFTP_IP):
     tn.write(b"\r\n")
     time.sleep(180)
     print("Done\n")
+
+def Configuration_Template():
+    print("Configuration_Template")

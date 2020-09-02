@@ -2,6 +2,7 @@
 import telnetlib
 
 def Backup_Telnet(IP, login, password, TFTP_IP):
+    print("Backup_Telnet")
     tn = telnetlib.Telnet(IP)
     time.sleep(1)
     tn.write(b"\n")
@@ -14,3 +15,6 @@ def Backup_Telnet(IP, login, password, TFTP_IP):
     tn.write(b"tftp " + TFTP_IP.encode('ascii') + b" put vrpcfg.zip vrpcfg2.zip" + b"\n")
     time.sleep(30)
     print("Done\n")
+
+def Configuration_Template():
+    print("Configuration_Template")
