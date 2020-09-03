@@ -1,5 +1,5 @@
 #Pragma Once
-import telnetlib, paramiko
+import telnetlib, paramiko, serial
 
 def Backup_Telnet(IP, login, password, TFTP_IP):
     print("Backup_Telnet")
@@ -37,8 +37,54 @@ def Backup_SSH(IP, login, password, TFTP_IP):
     time.sleep(30)
     print("Done\n")
 
-def Configuration_Template():
+def Configuration_Template_Switch():
     print("Configuration_Template")
+    com = input("Entry COMX name: ")
+
+    ser = serial.Serial(
+        port=str(com),  # COM is on windows, linux is different
+        baudrate=9600,  # many different baudrates are available
+        parity='N',  # no idea
+        stopbits=1,
+        bytesize=8,
+        timeout=8  # 8 seconds seems to be a good timeout, may need to be increased
+    )
+    ser.isOpen()
+    ser.flushInput()
+    print("You need to provide same data to template: ")
+    Hostname = input("Entry hostname: ")
+    IP = input("Entry IP: ")
+    Mask = input("Entry network mask: ")
+    Gateway = input("Entry gateway: ")
+    Password = input("Entry password: ")
+    Telnet = input("Enable telnet ? Y/N: ")
+    ser.write(b'\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n')
+    ser.write(b'enable' + b'\n')
+    time.sleep(1)
+    ser.write(b'conf t' + b'\n')
+    time.sleep(1)
+    ser.write(b'interface vlan 1' + b'\n')
+    time.sleep(1)
+    ser.write(b'ip address ' + IP.encode('ascii') + b' ' + Mask.encode('ascii') + b'\n')
+    time.sleep(1)
+    ser.write(b'no shutdown' + b'\n')
+    time.sleep(1)
+    ser.write(b'quit' + b'\n')
+    time.sleep(1)
+    ser.write(b'hostname ' + Hostname.encode('ascii') + b'\n')
+    time.sleep(1)
+    if Telnet == 'Y':
+        ser.write(b'line vty 0 4' + b'\n')
+        time.sleep(1)
+        ser.write(b'login' + b'\n')
+        time.sleep(1)
+        ser.write(b'password ' + Password.encode('ascii') + b'\n')
+        time.sleep(1)
+        ser.write(b'do wri' + b'\n')
+        ser.write(b'quit' + b'\n' + b'quit' + b'\n')
+    time.sleep(1)
+    ser.write(b'do wri' + b'\n')
+    ser.write(b'quit' + b'\n' + b'quit' + b'\n')
 
 def Execute_Command_Telnet(IP,login,password,command):
     print("Executing command on Cisco")

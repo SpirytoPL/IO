@@ -6,7 +6,7 @@ import pysnmp
 import serial
 import paramiko
 import os, sys, time, datetime
-import extremeos, ciscoos, threecomos, huaweios, hpos, snmp
+import extremeos, ciscoos, threecomos, huaweios, hpos, snmp, console
 ######################################  Global Variable  ###########################################################
 bufferSize = 64 * 1024 #for AES
 
@@ -55,9 +55,7 @@ def Create_DB():
             break
     f.close()
     print("Your data base will be encrypted with AES-256")
-    password = input("Enter password for database: ")
-    pyAesCrypt.encryptFile(File_name + ".txt", File_name + ".txt.aes", password, bufferSize)
-    os.remove(File_name + ".txt")
+    print("Don't forget to encrypt your database!")
     Menu()
 ###################################### 2) Edit Existing DB  ###########################################################
 def Edit_DB():
@@ -77,9 +75,14 @@ def Encrypt_DB():
     print("Encrypt_DB")
     File_name = input("Entry DB name: ")
     password = input("Entry DB password: ")
-    pyAesCrypt.encryptFile(File_name + ".txt", File_name + ".txt.aes", password, bufferSize)
-    os.remove(File_name + ".txt")
-    print("Database is encrypted")
+    repassword = input("Rentry DB password: ")
+    if password == repassword:
+        pyAesCrypt.encryptFile(File_name + ".txt", File_name + ".txt.aes", password, bufferSize)
+        os.remove(File_name + ".txt")
+        print("Database is encrypted")
+    else:
+        print("Password are not the same!")
+        Encrypt_DB()
     Menu()
 ###################################### 3)  Backup Telnet Module  ###########################################################
 def Backup_Telnet():
@@ -252,6 +255,8 @@ def Execute_Command():
             ciscoos.Execute_Command_SSH(IP, login, password, command)
         elif switch_os_choosen == switch_os[i] and switch_os_choosen == "Huawei":
             huaweios.Execute_Command_SSH(IP, login, password, command)
+    else:
+        Execute_Command()
     file.close()
     os.remove(File_name + ".txt")
     Menu()
@@ -303,44 +308,38 @@ def Restore_Configuration():
 
     Menu()
 ###################################### 11) Configuration Template  ###########################################################
-def Configuration_Template():
+def Configuration_Template_Switch():
     print("Configuration Template - console connection")
     switch_os = input("Entry os to configuration: ")
-    com = input("Entry COMX name: ")
-    ser = serial.Serial(
-        port=str(com),  # COM is on windows, linux is different
-        baudrate=9600,  # many different baudrates are available
-        parity='N',  # no idea
-        stopbits=1,
-        bytesize=8,
-        timeout=8  # 8 seconds seems to be a good timeout, may need to be increased
-    )
-    ser.isOpen()
-    ser.flushInput()
-    if switch_os == "Extreme":
-        extremeos.Configuration_Template()
-    elif switch_os == "HP":
-        hpos.Configuration_Template()
-    elif switch_os == "3com":
-        threecomos.Configuration_Template()
-    elif switch_os == "Cisco":
-        ciscoos.Configuration_Template()
-    elif switch_os == "Huawei":
-        huaweios.Configuration_Template()
-    Menu()
 
+    if switch_os == "Extreme":
+        extremeos.Configuration_Template_Switch()
+    elif switch_os == "HP":
+        hpos.Configuration_Template_Switch()
+    elif switch_os == "3com":
+        threecomos.Configuration_Template_Switch()
+    elif switch_os == "Cisco":
+        ciscoos.Configuration_Template_Switch()
+    elif switch_os == "Huawei":
+        huaweios.Configuration_Template_Switch()
+    else:
+        Configuration_Template_Switch()
+    Menu()
 ###################################### 12) SNMP Get Module  ###########################################################
 def SNMP_Get():
     print("SNMP_Get")
     community = input("Enter read community string: ")
     IP = input("Entry IP adrress: ")
     OID = input("Entry OID to get e.g. '1,3,6,1,4,1,1916,1,4,14,1,1':")
+    snmp.SNMP_Get(IP, OID, community)
     Menu()
 ###################################### 13) SNMP Get Bulk Module  ###########################################################
 def SNMP_Get_Bulk():
     print("SNMP_Get_Bulk")
     community = input("Enter read community string: ")
-
+    IP = input("Entry IP adrress: ")
+    OID = input("Entry OID to get e.g. '1,3,6,1,4,1,1916,1,4,14,1,1':")
+    snmp.SNMP_Get_Bulk(IP, OID, community)
     Menu()
 ############################################    MENU    #######################################################
 def Menu():
@@ -356,9 +355,9 @@ def Menu():
     8) Encrypt Database 
     9) Ping check
     *10) Restor configuration from backup
-    *11) Basic configuration template - console
-    *12) SNMP get
-    *13) SNMP get bulk
+    *11) Basic configuration template for switch - console
+    12) SNMP get
+    13) SNMP get bulk
     Choose option:
     ''')
     if int(choice) == 1:
