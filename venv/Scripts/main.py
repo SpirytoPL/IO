@@ -341,6 +341,25 @@ def SNMP_Get_Bulk():
     OID = input("Entry OID to get e.g. '1,3,6,1,4,1,1916,1,4,14,1,1':")
     snmp.SNMP_Get_Bulk(IP, OID, community)
     Menu()
+###################################### 14) Print database  ###########################################################
+def Print_Database():
+    print("Print_Database")
+    File_name = input("Entry DB name: ")
+    File_name = File_name + ".txt"
+    file = open(File_name)
+    for line in file:
+        print(line)
+    Menu()
+###################################### 15) Telnet connection  ###########################################################
+def Telnet_Connection():
+    print("Telnet_connection")
+
+    Menu()
+###################################### 16) SSH connection  ###########################################################
+def SSH_Connection():
+    print("SSH_Connection")
+
+    Menu()
 ############################################    MENU    #######################################################
 def Menu():
     choice  = input('''
@@ -358,6 +377,9 @@ def Menu():
     *11) Basic configuration template for switch - console
     12) SNMP get
     13) SNMP get bulk
+    14) Print database
+    *15) Telnet connetion
+    *16) SSH connection
     Choose option:
     ''')
     if int(choice) == 1:
@@ -381,7 +403,17 @@ def Menu():
     elif int(choice) == 10:
         Restore_Configuration()
     elif int(choice) == 11:
-        Configuration_Template()
+        Configuration_Template_Switch()
+    elif int(choice) == 12:
+        SNMP_Get()
+    elif int(choice) == 13:
+        SNMP_Get_Bulk()
+    elif int(choice) == 14:
+        Print_Database()
+    elif int(choice) == 15:
+        Telnet_Connection()
+    elif int(choice) == 16:
+        SSH_Connection()
     else:
         Menu()
 ############################################    MAIN    #######################################################
