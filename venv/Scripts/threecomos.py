@@ -58,6 +58,8 @@ def Configuration_Template_Switch():
     Password = input("Entry password: ")
     Telnet = input("Enable telnet ? Y/N: ")
     ser.write(b'\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n')
+    time.sleep(1)
+
 
 def Execute_Command_Telnet(IP,login,password,command):
     print("Executing command on 3Com")

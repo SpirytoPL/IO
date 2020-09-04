@@ -48,6 +48,23 @@ def Configuration_Template_Switch():
     Password = input("Entry password: ")
     Telnet = input("Enable telnet ? Y/N: ")
     ser.write(b'\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n')
+    time.sleep(1)
+    ser.write(b'system-view' + b'\n')
+    time.sleep(1)
+    ser.write(b'interface MEth0/0/0' + b'\n')
+    time.sleep(1)
+    ser.write(b'ip address ' + IP.encode('ascii') + b' ' + Mask.encode('ascii') + b'\n')
+    time.sleep(1)
+    ser.write(b'quit' + b'\n')
+    time.sleep(1)
+    ser.write(b'telnet server enable' + b'\n')
+    time.sleep(1)
+    ser.write(b'user-interface console 0' + b'\n')
+    time.sleep(1)
+    ser.write(b'authentication-mode password' + b'\n')
+    time.sleep(1)
+    ser.write(b'set authentication password cipher ' + Password.encode('ascii') + b'\n')
+    time.sleep(1)
 
 
 def Execute_Command_Telnet(IP,login,password,command):
