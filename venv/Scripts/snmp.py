@@ -1,15 +1,14 @@
 #Pragma Once
 from pysnmp.entity.rfc3413.oneliner import cmdgen
 
-def SNMP_Get(IP, OID, community):
+def SNMP_Get_Next(IP, OID, community):
     print("IP Address: "+str(IP))
+    print(OID)
     errorIndication, errorStatus, errorIndex, \
-    varBindTable = cmdgen.CommandGenerator().getCmd(
+    varBindTable = cmdgen.CommandGenerator().Cmd(
                 cmdgen.CommunityData(str(community)),
                 cmdgen.UdpTransportTarget((str(IP), 161)),
-                0,
-                25,
-                (str(OID))
+                (OID),
             )
     if errorIndication:
         print( errorIndication)
@@ -28,7 +27,7 @@ def SNMP_Get(IP, OID, community):
                 for name, val in varBindTableRow:
                     print ('%s = %s' % (name.prettyPrint(), val.prettyPrint()))
 
-def SNMP_Get(IP, OID, community):
+def SNMP_Get_Bulk(IP, OID, community):
     print("IP Address: "+str(IP))
     errorIndication, errorStatus, errorIndex, \
     varBindTable = cmdgen.CommandGenerator().bulkCmd(
@@ -36,7 +35,7 @@ def SNMP_Get(IP, OID, community):
                 cmdgen.UdpTransportTarget((str(IP), 161)),
                 0,
                 25,
-                (str(OID))
+                (OID),
             )
     if errorIndication:
         print( errorIndication)
@@ -54,4 +53,3 @@ def SNMP_Get(IP, OID, community):
             for varBindTableRow in varBindTable:
                 for name, val in varBindTableRow:
                     print ('%s = %s' % (name.prettyPrint(), val.prettyPrint()))
-

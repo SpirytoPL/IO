@@ -1,5 +1,5 @@
 #Pragma Once
-import telnetlib, paramiko, serial
+import telnetlib, paramiko, serial, time
 
 def Backup_Telnet(IP, login, password, TFTP_IP):
     print("Backup_Telnet")

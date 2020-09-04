@@ -98,28 +98,24 @@ def Backup_Telnet():
         pyAesCrypt.decryptFile(File_name + ".txt.aes", File_name + ".txt", password, bufferSize)
         file = open(File_name + ".txt")
         counter = 0
-        IP = []
-        login = []
-        password = []
-        switch_os = []
         for line in file:
             x = line.split(",")
-            IP.append(x[0])
-            login.append(x[1])
-            password.append(x[2])
-            switch_os.append(x[3])
+            IP = x[0]
+            login = x[1]
+            password = x[2]
+            switch_os = x[3]
             counter = counter + 1
         file.close()
         for i in range(counter):
-            if switch_os[i] == "Extreme":
+            if switch_os == "Extreme":
                 extremeos.Backup_Telnet(IP,login,password,TFTP_IP)
-            elif switch_os[i] == "HP":
+            elif switch_os == "HP":
                 hpos.Backup_Telnet(IP,login,password,TFTP_IP)
-            elif switch_os[i] == "3com":
+            elif switch_os == "3com":
                 threecomos.Backup_Telnet(IP,login,password,TFTP_IP)
-            elif switch_os[i] == "Cisco":
+            elif switch_os == "Cisco":
                 ciscoos.Backup_Telnet(IP,login,password,TFTP_IP)
-            elif switch_os[i] == "Huawei":
+            elif switch_os == "Huawei":
                 huaweios.Backup_Telnet(IP,login,password,TFTP_IP)
         os.remove(File_name + ".txt")
     elif int(choice) == 2:
@@ -155,28 +151,24 @@ def Backup_SSH():
         pyAesCrypt.decryptFile(File_name + ".txt.aes", File_name + ".txt", password, bufferSize)
         file = open(File_name + ".txt")
         counter = 0
-        IP = []
-        login = []
-        password = []
-        switch_os = []
         for line in file:
             x = line.split(",")
-            IP.append(x[0])
-            login.append(x[1])
-            password.append(x[2])
-            switch_os.append(x[3])
+            IP = x[0]
+            login = x[1]
+            password = x[2]
+            switch_os = x[3]
             counter = counter + 1
         file.close()
         for i in range(counter):
-            if switch_os[i] == "Extreme":
+            if switch_os == "Extreme":
                 extremeos.Backup_SSH(IP,login,password,TFTP_IP)
-            elif switch_os[i] == "HP":
+            elif switch_os == "HP":
                 hpos.Backup_SSH(IP,login,password,TFTP_IP)
-            elif switch_os[i] == "3com":
+            elif switch_os == "3com":
                 threecomos.Backup_SSH(IP,login,password,TFTP_IP)
-            elif switch_os[i] == "Cisco":
+            elif switch_os == "Cisco":
                 ciscoos.Backup_SSH(IP,login,password,TFTP_IP)
-            elif switch_os[i] == "Huawei":
+            elif switch_os == "Huawei":
                 huaweios.Backup_SSH(IP,login,password,TFTP_IP)
         os.remove(File_name + ".txt")
     elif int(choice) == 2:
@@ -221,39 +213,35 @@ def Execute_Command():
     pyAesCrypt.decryptFile(File_name + ".txt.aes", File_name + ".txt", password, bufferSize)
     file = open(File_name + ".txt")
     counter = 0
-    IP = []
-    login = []
-    password = []
-    switch_os = []
     for line in file:
         x = line.split(",")
-        IP.append(x[0])
-        login.append(x[1])
-        password.append(x[2])
-        switch_os.append(x[3])
+        IP = x[0]
+        login = x[1]
+        password = x[2]
+        switch_os = x[3]
         counter = counter + 1
     if int(choosen_connection) == 1:
         for i in range(counter):
-            if switch_os_choosen == switch_os[i] and switch_os_choosen == "Extreme":
+            if switch_os_choosen == switch_os and switch_os_choosen == "Extreme":
                 extremeos.Execute_Command_Telnet(IP,login,password,command)
-            elif switch_os_choosen == switch_os[i] and switch_os_choosen == "HP":
+            elif switch_os_choosen == switch_os and switch_os_choosen == "HP":
                 hpos.Execute_Command_Telnet(IP,login,password,command)
-            elif switch_os_choosen == switch_os[i] and switch_os_choosen == "3Com":
+            elif switch_os_choosen == switch_os and switch_os_choosen == "3Com":
                 threecomos.Execute_Command_Telnet(IP,login,password,command)
-            elif switch_os_choosen == switch_os[i] and switch_os_choosen == "Cisco":
+            elif switch_os_choosen == switch_os and switch_os_choosen == "Cisco":
                 ciscoos.Execute_Command_Telnet(IP,login,password,command)
-            elif switch_os_choosen == switch_os[i] and switch_os_choosen == "Huawei":
+            elif switch_os_choosen == switch_os and switch_os_choosen == "Huawei":
                 huaweios.Execute_Command_Telnet(IP,login,password,command)
     elif int(choosen_connection) == 2:
-        if switch_os_choosen == switch_os[i] and switch_os_choosen == "Extreme":
+        if switch_os_choosen == switch_os and switch_os_choosen == "Extreme":
             extremeos.Execute_Command_SSH(IP, login, password, command)
-        elif switch_os_choosen == switch_os[i] and switch_os_choosen == "HP":
+        elif switch_os_choosen == switch_os and switch_os_choosen == "HP":
             hpos.Execute_Command_SSH(IP, login, password, command)
-        elif switch_os_choosen == switch_os[i] and switch_os_choosen == "3Com":
+        elif switch_os_choosen == switch_os and switch_os_choosen == "3Com":
             threecomos.Execute_Command_SSH(IP, login, password, command)
-        elif switch_os_choosen == switch_os[i] and switch_os_choosen == "Cisco":
+        elif switch_os_choosen == switch_os and switch_os_choosen == "Cisco":
             ciscoos.Execute_Command_SSH(IP, login, password, command)
-        elif switch_os_choosen == switch_os[i] and switch_os_choosen == "Huawei":
+        elif switch_os_choosen == switch_os and switch_os_choosen == "Huawei":
             huaweios.Execute_Command_SSH(IP, login, password, command)
     else:
         Execute_Command()
@@ -305,7 +293,6 @@ def Ping_Check():
 ###################################### 10) Restor configuration  ###########################################################
 def Restore_Configuration():
     print("Restore_Configuration")
-
     Menu()
 ###################################### 11) Configuration Template  ###########################################################
 def Configuration_Template_Switch():
@@ -326,11 +313,12 @@ def Configuration_Template_Switch():
         Configuration_Template_Switch()
     Menu()
 ###################################### 12) SNMP Get Module  ###########################################################
-def SNMP_Get():
+def SNMP_Get_Next():
     print("SNMP_Get")
     community = input("Enter read community string: ")
     IP = input("Entry IP adrress: ")
-    OID = input("Entry OID to get e.g. '1,3,6,1,4,1,1916,1,4,14,1,1':")
+    OID = ""
+    OID = input("Entry OID to get e.g. '1.3.6.1.2.1.2.2.1.5':")
     snmp.SNMP_Get(IP, OID, community)
     Menu()
 ###################################### 13) SNMP Get Bulk Module  ###########################################################
@@ -338,7 +326,8 @@ def SNMP_Get_Bulk():
     print("SNMP_Get_Bulk")
     community = input("Enter read community string: ")
     IP = input("Entry IP adrress: ")
-    OID = input("Entry OID to get e.g. '1,3,6,1,4,1,1916,1,4,14,1,1':")
+    OID = ""
+    OID = input("Entry OID to get e.g. '1.3.6.1.4.1.1916.1.4.14.1.1':")
     snmp.SNMP_Get_Bulk(IP, OID, community)
     Menu()
 ###################################### 14) Print database  ###########################################################
@@ -364,20 +353,20 @@ def SSH_Connection():
 def Menu():
     choice  = input('''
     Welcome to automatization tool for network device, supported os: Extreme, HP, 3com, Huawei, Cisco
-    1) Create new Database
-    2) Edit existing Database
-    3) Do backup using telnet
-    4) Do backup using SSH
-    5) Start simple FTP server
+    1) Create new Database ✓
+    2) Edit existing Database ✓
+    3) Do backup using telnet ✓
+    4) Do backup using SSH ✓
+    5) Start simple FTP server ✓
     *6) SNMP walk
-    7) Execute custom command
-    8) Encrypt Database 
-    9) Ping check
+    7) Execute custom command ✓
+    8) Encrypt Database ✓
+    9) Ping check ✓
     *10) Restor configuration from backup
     *11) Basic configuration template for switch - console
-    12) SNMP get
-    13) SNMP get bulk
-    14) Print database
+    12) SNMP get  ✓
+    13) SNMP get bulk ✓
+    14) Print database  ✓
     *15) Telnet connetion
     *16) SSH connection
     Choose option:
@@ -405,7 +394,7 @@ def Menu():
     elif int(choice) == 11:
         Configuration_Template_Switch()
     elif int(choice) == 12:
-        SNMP_Get()
+        SNMP_Get_Next()
     elif int(choice) == 13:
         SNMP_Get_Bulk()
     elif int(choice) == 14:

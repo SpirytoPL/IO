@@ -1,5 +1,5 @@
 #Pragma Once
-import telnetlib, paramiko, serial
+import telnetlib, paramiko, serial, time
 
 def Backup_Telnet(IP, login, password, TFTP_IP):
     print("Backup_Telnet")
@@ -44,6 +44,8 @@ def Configuration_Template_Switch():
     Gateway = input("Entry gateway: ")
     Password = input("Entry password: ")
     Telnet = input("Enable telnet ? Y/N: ")
+    ser.read_until(b'\n' + b'login:')
+    ser.write(b'admin' + b'\n')
     ser.write(b'\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n')
     time.sleep(1)
     ser.write(b'configure vlan default ipaddress ' + IP.encode('ascii') + b' ' + Mask.encode('ascii') + b'\n')
@@ -61,7 +63,7 @@ def Configuration_Template_Switch():
     else:
         ser.write(b'disable telnet' + b'\n')
     time.sleep(1)
-    ser.write(b'save' b'\n')
+    #ser.write(b'save' + b'\n')
 
 def Execute_Command_Telnet(IP,login,password,command):
     print("Executing command on EXOS")

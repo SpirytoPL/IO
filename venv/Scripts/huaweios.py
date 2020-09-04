@@ -1,5 +1,5 @@
 #Pragma Once
-import telnetlib, paramiko, serial
+import telnetlib, paramiko, serial, time
 
 def Backup_Telnet(IP, login, password, TFTP_IP):
     print("Backup_Telnet")
@@ -48,6 +48,7 @@ def Configuration_Template_Switch():
     Password = input("Entry password: ")
     Telnet = input("Enable telnet ? Y/N: ")
     ser.write(b'\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n')
+
 
 def Execute_Command_Telnet(IP,login,password,command):
     print("Executing command on Huawei")

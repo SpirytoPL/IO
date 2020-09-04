@@ -1,5 +1,5 @@
 #Pragma Once
-import telnetlib, paramiko, serial
+import telnetlib, paramiko, serial, time
 
 def Backup_Telnet(IP, login, password, TFTP_IP):
     print("Backup_Telnet")
@@ -50,8 +50,22 @@ def Configuration_Template_Switch():
     Password = input("Entry password: ")
     Telnet = input("Enable telnet ? Y/N: ")
     ser.write(b'\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n')
-
-
+    time.sleep(1)
+    ser.write(b'enable')
+    time.sleep(1)
+    ser.write(b'\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n')
+    ser.write(b'conf t')
+    time.sleep(1)
+    ser.write(b'\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n')
+    time.sleep(2)
+    ser.write(b'vlan 1 ip address ' + IP.encode('ascii') + b' ' + Mask.encode('ascii') + b'\n')
+    time.sleep(1)
+    ser.write(b'quit' + b'\n')
+    time.sleep(1)
+    ser.write(b'telnet' + b'\n')
+    time.sleep(1)
+    ser.write(b'password manager manager ' + Password.encode('ascii') + b'\n')
+    
 def Execute_Command_Telnet(IP,login,password,command):
     print("Executing command on HP")
     tn = telnetlib.Telnet(IP)
