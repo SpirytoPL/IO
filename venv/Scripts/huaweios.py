@@ -1,6 +1,22 @@
 #Pragma Once
 import telnetlib, paramiko, serial, time
 
+def Restore_Telnet(IP, login, password, TFTP_IP, config):
+    print("Restore_Telnet")
+    tn = telnetlib.Telnet(IP)
+    time.sleep(1)
+    tn.write(b"\n")
+    tn.read_until(b"Username:")
+    tn.write(login.encode('ascii') + b"\n")
+    time.sleep(1)
+    tn.read_until(b"Password:")
+    tn.write(password.encode('ascii') + b"\n")
+    time.sleep(1)
+    tn.write(b"tftp " + TFTP_IP.encode('ascii') + b" get vrpcfg.zip vrpcfg2.zip" + b"\n")
+    time.sleep(30)
+    print("Done\n")
+    time.sleep(1)
+
 def Backup_Telnet(IP, login, password, TFTP_IP):
     print("Backup_Telnet")
     tn = telnetlib.Telnet(IP)
@@ -15,7 +31,18 @@ def Backup_Telnet(IP, login, password, TFTP_IP):
     tn.write(b"tftp " + TFTP_IP.encode('ascii') + b" put vrpcfg.zip vrpcfg2.zip" + b"\n")
     time.sleep(30)
     print("Done\n")
+    time.sleep(1)
 
+def Restore_SSH(IP, login, password, TFTP_IP, config):
+    print("Restore_SSH")
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.connect(IP, username=login, password=password)
+    time.sleep(1)
+    ssh.write(b"tftp " + TFTP_IP.encode('ascii') + b" get vrpcfg.zip vrpcfg2.zip" + b"\n")
+    time.sleep(30)
+    print("Done\n")
+    time.sleep(1)
 
 def Backup_SSH(IP, login, password, TFTP_IP):
     print("Backup SSH")
@@ -26,6 +53,7 @@ def Backup_SSH(IP, login, password, TFTP_IP):
     ssh.exec_command(b"tftp " + TFTP_IP.encode('ascii') + b" put vrpcfg.zip vrpcfg2.zip" + b"\n")
     time.sleep(30)
     print("Done\n")
+    time.sleep(1)
 
 def Configuration_Template_Switch():
     print("Configuration_Template")
@@ -83,6 +111,7 @@ def Execute_Command_Telnet(IP,login,password,command):
     tn.write(command.encode('ascii')  + b"\n")
     time.sleep(1)
     print("Done\n")
+    time.sleep(1)
 
 def Execute_Command_SSH(IP,login,password,command):
     print("Executing command on Huawei")
@@ -95,3 +124,4 @@ def Execute_Command_SSH(IP,login,password,command):
     ssh.exec_command(command + b"\n")
     time.sleep(1)
     print("Done\n")
+    time.sleep(1)

@@ -188,7 +188,7 @@ def Backup_SSH():
         elif switch_os == "Huawei":
             huaweios.Backup_SSH(IP, login, password, TFTP_IP)
     else:
-        Backup_Telnet()
+        Backup_SSH()
 
     Menu()
 ###################################### 6) SNMP Walk Module  ###########################################################
@@ -290,9 +290,62 @@ def Ping_Check():
     else:
         Ping_Check()
     Menu()
-###################################### 10) Restor configuration  ###########################################################
-def Restore_Configuration():
+###################################### 10) Restor configuration telnet  ###########################################################
+def Restore_Configuration_Telnet():
     print("Restore_Configuration")
+    print("Backup_Telnet")
+    choice  = input ('''
+    1) Use existing database
+    2) Custom host 
+    ''')
+    if int(choice) == 1:
+        TFTP_IP = input("Enter TFTP Server IP: ")
+        File_name = input("Entry DB name: ")
+        password = input("Entry DB password: ")
+        pyAesCrypt.decryptFile(File_name + ".txt.aes", File_name + ".txt", password, bufferSize)
+        file = open(File_name + ".txt")
+        counter = 0
+        for line in file:
+            x = line.split(",")
+            IP = x[0]
+            login = x[1]
+            password = x[2]
+            switch_os = x[3]
+            counter = counter + 1
+        file.close()
+        for i in range(counter):
+            config = input("Entry config file name: ")
+            if switch_os == "Extreme":
+                extremeos.Restore_Telnet(IP,login,password,TFTP_IP, config)
+            elif switch_os == "HP":
+                hpos.Restore_Telnet(IP,login,password,TFTP_IP, config)
+            elif switch_os == "3com":
+                threecomos.Restore_Telnet(IP,login,password,TFTP_IP, config)
+            elif switch_os == "Cisco":
+                ciscoos.Restore_Telnet(IP,login,password,TFTP_IP, config)
+            elif switch_os == "Huawei":
+                huaweios.Restore_Telnet(IP,login,password,TFTP_IP, config)
+        os.remove(File_name + ".txt")
+    elif int(choice) == 2:
+        IP = input("IP: ")
+        login = input ("login: ")
+        password = input("password: ")
+        TFTP_IP = input ("TFTP Server IP: ")
+        switch_os = input ("Enter switch OS (Extreme/3com/HP/Cisco/Huawei): ")
+        config = input("Entry config file name: ")
+        if switch_os == "Extreme":
+            extremeos.Restore_Telnet(IP, login, password, TFTP_IP, config)
+        elif switch_os == "HP":
+            hpos.Restore_Telnet(IP, login, password, TFTP_IP, config)
+        elif switch_os == "3com":
+            threecomos.Restore_Telnet(IP, login, password, TFTP_IP, config)
+        elif switch_os == "Cisco":
+            ciscoos.Restore_Telnet(IP, login, password, TFTP_IP, config)
+        elif switch_os == "Huawei":
+            huaweios.Restore_Telnet(IP, login, password, TFTP_IP, config)
+    else:
+        Restore_Telnet()
+
     Menu()
 ###################################### 11) Configuration Template  ###########################################################
 def Configuration_Template_Switch():
@@ -343,10 +396,67 @@ def Print_Database():
 def Telnet_Connection():
     print("Telnet_connection")
 
+
     Menu()
 ###################################### 16) SSH connection  ###########################################################
 def SSH_Connection():
     print("SSH_Connection")
+
+    Menu()
+###################################### 17) Restore SSH Module  ###########################################################
+def Restore_SSH():
+    print("Restore_SSH")
+    choice  = input ('''
+    1) Use existing database
+    2) Custom host 
+    ''')
+    if int(choice) == 1:
+        TFTP_IP = input("Enter TFTP Server IP: ")
+        File_name = input("Entry DB name: ")
+        password = input("Entry DB password: ")
+        pyAesCrypt.decryptFile(File_name + ".txt.aes", File_name + ".txt", password, bufferSize)
+        file = open(File_name + ".txt")
+        counter = 0
+        for line in file:
+            x = line.split(",")
+            IP = x[0]
+            login = x[1]
+            password = x[2]
+            switch_os = x[3]
+            counter = counter + 1
+        file.close()
+        for i in range(counter):
+            config = input("Entry config file name: ")
+            if switch_os == "Extreme":
+                extremeos.Restore_SSH(IP,login,password,TFTP_IP, config)
+            elif switch_os == "HP":
+                hpos.Restore_SSH(IP,login,password,TFTP_IP, config)
+            elif switch_os == "3com":
+                threecomos.Restore_SSH(IP,login,password,TFTP_IP, config)
+            elif switch_os == "Cisco":
+                ciscoos.Restore_SSH(IP,login,password,TFTP_IP, config)
+            elif switch_os == "Huawei":
+                huaweios.Restore_SSH(IP,login,password,TFTP_IP, config)
+        os.remove(File_name + ".txt")
+    elif int(choice) == 2:
+        IP = input("IP: ")
+        login = input ("login: ")
+        password = input("password: ")
+        TFTP_IP = input ("TFTP Server IP: ")
+        switch_os = input ("Enter switch OS (Extreme/3com/HP/Cisco/Huawei): ")
+        config = input("Entry config file name: ")
+        if switch_os == "Extreme":
+            extremeos.Restore_SSH(IP, login, password, TFTP_IP, config)
+        elif switch_os == "HP":
+            hpos.Restore_SSH(IP, login, password, TFTP_IP, config)
+        elif switch_os == "3com":
+            threecomos.Restore_SSH(IP, login, password, TFTP_IP, config)
+        elif switch_os == "Cisco":
+            ciscoos.Restore_SSH(IP, login, password, TFTP_IP, config)
+        elif switch_os == "Huawei":
+            huaweios.Restore_SSH(IP, login, password, TFTP_IP, config)
+    else:
+        Restore_SSH()
 
     Menu()
 ############################################    MENU    #######################################################
@@ -362,13 +472,14 @@ def Menu():
     7) Execute custom command ✓
     8) Encrypt Database ✓
     9) Ping check ✓
-    *10) Restor configuration from backup
-    *11) Basic configuration template for switch - console
+    10) Restor configuration from backup - telnet ✓
+    11) Basic configuration template for switch - console ✓
     12) SNMP get  ✓
     13) SNMP get bulk ✓
     14) Print database  ✓
     *15) Telnet connetion
     *16) SSH connection
+    *17) Restor configuration from backup - SSH
     Choose option:
     ''')
     if int(choice) == 1:

@@ -1,6 +1,23 @@
 #Pragma Once
 import telnetlib, paramiko, serial, time
 
+def Restore_Telnet(IP, login, password, TFTP_IP, config):
+    print("Restore_Telnet")
+    tn = telnetlib.Telnet(IP)
+    time.sleep(1)
+    tn.write(b"\n")
+    tn.read_until(b"Username:")
+    tn.write(login.encode('ascii') + b"\n")
+    tn.read_until(b"Password:")
+    tn.write(password.encode('ascii') + b"\n")
+    time.sleep(1)
+    tn.write(b"conf t\n")
+    time.sleep(1)
+    tn.write(b"copy tftp config secondary " + TFTP_IP.encode('ascii') + b' ' + config.encode('ascii') + b"\n")
+    time.sleep(30)
+    print("Done\n")
+    time.sleep(1)
+
 def Backup_Telnet(IP, login, password, TFTP_IP):
     print("Backup_Telnet")
     tn = telnetlib.Telnet(IP)
@@ -16,7 +33,20 @@ def Backup_Telnet(IP, login, password, TFTP_IP):
     tn.write(b"copy running-config tftp " + TFTP_IP.encode('ascii') + b" config-" + IP.encode('ascii') + b"\n")
     time.sleep(30)
     print("Done\n")
+    time.sleep(1)
 
+def Restore_SSH(IP, login, password, TFTP_IP, config):
+    print("Restore_SSH")
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.connect(IP, username=login, password=password)
+    time.sleep(1)
+    ssh.write(b"conf t\n")
+    time.sleep(1)
+    ssh.write(b"copy tftp config secondary " + TFTP_IP.encode('ascii') + b' ' + config.encode('ascii') + b"\n")
+    time.sleep(30)
+    print("Done\n")
+    time.sleep(1)
 
 def Backup_SSH(IP, login, password, TFTP_IP):
     print("Backup SSH")
@@ -27,6 +57,7 @@ def Backup_SSH(IP, login, password, TFTP_IP):
     ssh.exec_command(b"copy running-config tftp " + TFTP_IP.encode('ascii') + b" config-" + IP.encode('ascii') + b"\n")
     time.sleep(30)
     print("Done\n")
+    time.sleep(1)
 
 
 def Configuration_Template_Switch():
@@ -81,6 +112,7 @@ def Execute_Command_Telnet(IP,login,password,command):
     tn.write(command.encode('ascii') + b"\n")
     time.sleep(1)
     print("Done\n")
+    time.sleep(1)
 
 def Execute_Command_SSH(IP,login,password,command):
     print("Executing command on HP")
@@ -91,3 +123,4 @@ def Execute_Command_SSH(IP,login,password,command):
     ssh.exec_command(command + b"\n")
     time.sleep(1)
     print("Done\n")
+    time.sleep(1)
