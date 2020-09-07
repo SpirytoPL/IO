@@ -479,7 +479,7 @@ def Menu():
     14) Print database  ✓
     *15) Telnet connetion
     *16) SSH connection
-    *17) Restor configuration from backup - SSH
+    17) Restor configuration from backup - SSH ✓
     Choose option:
     ''')
     if int(choice) == 1:
