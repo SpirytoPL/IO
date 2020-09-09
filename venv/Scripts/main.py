@@ -459,6 +459,25 @@ def Restore_SSH():
         Restore_SSH()
 
     Menu()
+###################################### 18) Get DNS record  ###########################################################
+def Get_DNS():
+    print("Get DNS")
+
+    Menu()
+###################################### 19) Print Netstat  ###########################################################
+def Print_Netstat():
+    print("Print Netstat")
+    print(os.system("netstat"))
+    Menu()
+###################################### 20) Print tracert  ###########################################################
+def Print_Tracert():
+    print("Print tracert")
+    IP = input("Entry IP: ")
+    if os.name == 'nt':
+        response = os.system("tracert " + IP)
+    else:
+        response = os.system("traceroute " + IP)
+    Menu()
 ############################################    MENU    #######################################################
 def Menu():
     choice  = input('''
@@ -480,6 +499,9 @@ def Menu():
     *15) Telnet connetion
     *16) SSH connection
     17) Restor configuration from backup - SSH ✓
+    *18) Get DNS record
+    19) Print netstat ✓
+    20) Print tracert / traceroute ✓
     Choose option:
     ''')
     if int(choice) == 1:
@@ -501,7 +523,7 @@ def Menu():
     elif int(choice) == 9:
         Ping_Check()
     elif int(choice) == 10:
-        Restore_Configuration()
+        Restore_Configuration_Telnet()
     elif int(choice) == 11:
         Configuration_Template_Switch()
     elif int(choice) == 12:
@@ -514,6 +536,15 @@ def Menu():
         Telnet_Connection()
     elif int(choice) == 16:
         SSH_Connection()
+    elif int(choice) == 17:
+        Restore_SSH()
+    elif int(choice) == 18:
+        Get_DNS()
+    elif int(choice) == 19:
+        Print_Netstat()
+    elif int(choice) == 20:
+        Print_Tracert()
+
     else:
         Menu()
 ############################################    MAIN    #######################################################
