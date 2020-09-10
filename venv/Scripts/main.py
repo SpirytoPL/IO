@@ -7,6 +7,7 @@ import serial
 import paramiko
 import os, sys, time, datetime
 import extremeos, ciscoos, threecomos, huaweios, hpos, snmp, console
+import PySimpleGUI as sg
 ######################################  Global Variable  ###########################################################
 bufferSize = 64 * 1024 #for AES
 
@@ -14,6 +15,7 @@ bufferSize = 64 * 1024 #for AES
 def TFTP():
     server = tftpy.TftpServer('')
     ip_address = input("Enter server IP adrress: ")
+    print("Sever is listining...")
     server.listen(ip_address, 69)
 ######################################  Crypto Module  ###########################################################
 def Crypto():
@@ -387,10 +389,14 @@ def SNMP_Get_Bulk():
 def Print_Database():
     print("Print_Database")
     File_name = input("Entry DB name: ")
+    password = input("Entry DB password: ")
+    pyAesCrypt.decryptFile(File_name + ".txt.aes", File_name + ".txt", password, bufferSize)
     File_name = File_name + ".txt"
     file = open(File_name)
     for line in file:
         print(line)
+    file.close()
+    os.remove(File_name)
     Menu()
 ###################################### 15) Telnet connection  ###########################################################
 def Telnet_Connection():
@@ -482,6 +488,7 @@ def Print_Tracert():
 def Menu():
     choice  = input('''
     Welcome to automatization tool for network device, supported os: Extreme, HP, 3com, Huawei, Cisco
+    * => in development    ✓ => ready to use
     1) Create new Database ✓
     2) Edit existing Database ✓
     3) Do backup using telnet ✓
@@ -547,6 +554,41 @@ def Menu():
 
     else:
         Menu()
+############################################    GUI     #######################################################
+'''
+sg.theme('DarkAmber')
+layout = [  [sg.Text('Welcome to automatization tool for network device, supported os: Extreme, HP, 3com, Huawei, Cisco')],
+            [sg.Button('Create new Database')],
+            [sg.Button('Edit existing Database')],
+            [sg.Button('Do backup using telnet')],
+            [sg.Button('Do backup using SSH')],
+            [sg.Button('Start simple FTP server')],
+            [sg.Button('SNMP walk')],
+            [sg.Button('Execute custom command')],
+            [sg.Button('Encrypt Database')],
+            [sg.Button('Ping check')],
+            [sg.Button('Restor configuration from backup - telnet')],
+            [sg.Button('Basic configuration template for switch - console')],
+            [sg.Button('SNMP get')],
+            [sg.Button('SNMP get bulk')],
+            [sg.Button('Print database')],
+            [sg.Button('Telnet connetion')],
+            [sg.Button('SSH connection')],
+            [sg.Button('Restor configuration from backup - SSH')],
+            [sg.Button('Get DNS record')],
+            [sg.Button('Print netstat')],
+            [sg.Button('Print tracert / traceroute')],
+        ]
+
+window = sg.Window('Py_Network', layout)
+while True:
+    choice, value = window.read()
+    print(choice)
+    if choice == 'Create new Database':
+        Create_DB()
+
+window.close()
+'''
 ############################################    MAIN    #######################################################
 Menu()
 
