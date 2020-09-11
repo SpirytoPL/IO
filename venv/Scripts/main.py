@@ -515,7 +515,7 @@ def Menu():
     *15) Telnet connetion
     *16) SSH connection
     17) Restor configuration from backup - SSH ✓
-    *18) Get DNS record
+    18) Get DNS record ✓
     19) Print netstat ✓
     20) Print tracert / traceroute ✓
     Choose option:
