@@ -5,9 +5,10 @@ import pyAesCrypt
 import pysnmp
 import serial
 import paramiko
-import os, sys, time, datetime
+import os, sys, time, datetime, subprocess
 import extremeos, ciscoos, threecomos, huaweios, hpos, snmp, console
 import PySimpleGUI as sg
+
 ######################################  Global Variable  ###########################################################
 bufferSize = 64 * 1024 #for AES
 
@@ -468,7 +469,15 @@ def Restore_SSH():
 ###################################### 18) Get DNS record  ###########################################################
 def Get_DNS():
     print("Get DNS")
-
+    print("Befor first you need to execute 'Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser' in Powershell running as administrator")
+    print("Entry domain to check: ")
+    p = subprocess.Popen(["powershell.exe",
+                          "DNS.ps1"],
+                         stdout=sys.stdout)
+    try:
+        p.communicate(timeout=10)
+    except:
+        p.kill()
     Menu()
 ###################################### 19) Print Netstat  ###########################################################
 def Print_Netstat():
