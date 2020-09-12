@@ -502,7 +502,7 @@ def Menu():
     2) Edit existing Database ✓
     3) Do backup using telnet ✓
     4) Do backup using SSH ✓
-    5) Start simple FTP server ✓
+    5) Start simple TFTP server ✓
     *6) SNMP walk
     7) Execute custom command ✓
     8) Encrypt Database ✓
