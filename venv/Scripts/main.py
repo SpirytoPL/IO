@@ -282,13 +282,14 @@ def Ping_Check():
         time.sleep(3)
     elif int(choice) == 3:
         network = input("Entry netowrk to ping: ")
+        netowrk_last = network.split('.')
         mask = input("Entry mask (24-32): ")
         mask = 32 - int(mask)
         for i in range (2**mask-1):
             if os.name == 'nt':
-                response = os.system("ping -n 1 " + network + 1 + i)
+                response = os.system("ping -n 1 " + str(netowrk_last[0]) + '.' + str(netowrk_last[1]) + '.' + str(netowrk_last[2]) + '.' + str((int(netowrk_last[3]) + 1 + i)))
             else:
-                response = os.system("ping -c 1 " + network + 1 + i)
+                response = os.system("ping -c 1 " +  str(netowrk_last[0]) + '.' + str(netowrk_last[1]) + '.' + str(netowrk_last[2]) + '.' + str((int(netowrk_last[3]) + 1 + i)))
             time.sleep(1)
     else:
         Ping_Check()
